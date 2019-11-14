@@ -1,0 +1,22 @@
+'''
+Tokenizers are keras.preprocessing.text.Tokenizer
+'''
+
+def combine_tokenizer(old_tokenizer,new_tokenizer):
+  new_index = len(old_tokenizer.word_index)+1
+  ind_docs = len(old_tokenizer.index_docs)+1
+  old_tokenizer.document_count += new_tokenizer.document_count
+
+  for item in new_tokenizer.word_index:
+    if item not in old_tokenizer.word_index:
+      old_tokenizer.word_index[item] = new_index
+      old_tokenizer.index_word[new_index] = item
+      old_tokenizer.word_docs[item] = 1
+      old_tokenizer.word_counts[item] = 1
+      old_tokenizer.index_docs[ind_docs] = 1
+    else:
+      old_tokenizer.word_counts[item] += 1
+      old_tokenizer.word_docs[item] += 1
+    new_index += 1
+    ind_docs +=1
+  return old_tokenizer
